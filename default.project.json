@@ -1,0 +1,12 @@
+{
+    "name": "blueserializer",
+    "tree": {
+        "$className": "DataModel",
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "blueserializer": {
+                "$path": "module"
+            }
+        }
+    }
+}
