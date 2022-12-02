@@ -10,15 +10,17 @@ Writing your serializers is just pain. So I wrote this package just for the purp
 Serializing roblox's primitive types.
 ## Supported primitive types (so far)
 
-| CFrame
-| Vector3
-| Color3
-| EnumItem
-| BrickColor
-| TweenInfo
-| Vector2
-| Vector2int16
-| Vector3int16
+| Supported primitive types |
+|---------------------------|
+| CFrame                    |
+| Vector3                   |
+| Color3                    |
+| EnumItem                  |
+| BrickColor                |
+| TweenInfo                 |
+| Vector2                   |
+| Vector2int16              |
+| Vector3int16              |
 
 (note that ill probably not update this list frequently but to get the latest list,
 read serializerList.lua inside the module folder)
