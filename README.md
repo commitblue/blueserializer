@@ -9,6 +9,7 @@ Roblox primitive types are a thing, We use it regularly and alot, even if you di
 Writing your serializers is just pain. So I wrote this package just for the purpose of
 Serializing roblox's primitive types.
 ## Supported primitive types (so far)
+
 | CFrame
 | Vector3
 | Color3
@@ -18,6 +19,7 @@ Serializing roblox's primitive types.
 | Vector2
 | Vector2int16
 | Vector3int16
+
 (note that ill probably not update this list frequently but to get the latest list,
 read serializerList.lua inside the module folder)
 ## Some things to note
