@@ -1,6 +1,6 @@
 <h1 align="center">blueserializer</h1>
 <div align="center">A serializer written so you dont have to make one yourself.</div>
-</br>
+<div>&nbsp;</div>
 ## Why.
 Roblox primitive types are a thing, We use it regularly and alot, even if you didn't know. and the issue with it is that..
 1. You cant save it to datastores
