@@ -35,6 +35,26 @@ print(blueSerializer.deserialize(serialized)) -- >> Vector3.new(1, 5, 88) or in 
 -- blueSerialize.deSerialize exists as an alias of blueSerializer.deserialize
 ```
 
+```lua
+local blueSerializer = require(path.to.blueserializer)
+local dataStoreService = game:GetService("DataStoreService")
+local dataStore = dataStoreService:GetDataStore("mypart")
+local myPart = workspace.myPart
+-- i want to save the part's position and the part's color3 in workspace
+dataStore:SetAsync("mypart", {
+    Position = blueSerializer.serialize(myPart.Position),
+    Color3 = blueSerializer.serialize(myPart.Color3)
+})
+
+-- the loading
+local dat = dataStore:GetAsync("mypart")
+myPart.Position = blueSerializer.deserialize(dat.Position)
+myPart.Color3 = blueSerializer.serialize(dat.Color3)
+
+-- note this is psuedo example code and is only supposed to represent the basic usage
+-- of blue serializer
+```
+
 ## Some things to note
 Default.project.json should be ignored. I only added it for the autofill
 This is not the most optimized way to serialize.
