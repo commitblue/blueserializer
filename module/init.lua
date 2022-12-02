@@ -1,9 +1,10 @@
 local serializerList = require(script.serializerList)
 local module = {}
 function module.serialize(value) : table
-    local valueIdFound = serializerList.valueIds[typeof(value)]
+    local valueTypeOf = typeof(value)
+    local valueIdFound = serializerList.valueIds[valueTypeOf]
     if valueIdFound then
-        return serializerList.serializers[typeof(value)](value)
+        return serializerList.serializers[valueTypeOf](value)
     end
     return value
 end

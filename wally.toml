@@ -1,5 +1,6 @@
 [package]
 name = "commitblue/blueserializer"
+description = "A serializer to serialize roblox's primitive types into tables. and a deserializer"
 version = "0.1.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
