@@ -49,7 +49,7 @@ dataStore:SetAsync("mypart", {
 -- the loading
 local dat = dataStore:GetAsync("mypart")
 myPart.Position = blueSerializer.deserialize(dat.Position)
-myPart.Color3 = blueSerializer.serialize(dat.Color3)
+myPart.Color3 = blueSerializer.deserialize(dat.Color3)
 
 -- note this is psuedo example code and is only supposed to represent the basic usage
 -- of blue serializer
