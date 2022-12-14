@@ -2,7 +2,7 @@
 
 local module = {}
 
-local serializerList = require(game.SoundService.Script.serializerList)
+local serializerList = require(script.serializerList)
 
 function module.serialize<value>(value) : {} | value
 	local valueType = typeof(value)
