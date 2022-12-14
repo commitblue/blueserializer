@@ -29,4 +29,4 @@ end
 -- alias
 module.deSerialize = module.deserialize
 
-return module
+return table.freeze(module)
