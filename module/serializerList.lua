@@ -27,7 +27,6 @@ local typeToId = {
 	Region3int16 = "R3i",
 	Font = "F",
 	Tuple = "TU",
-	Function = "FUNC"
 }
 
 type serializedCFrame = {typeof(typeToId.CFrame) | number}
@@ -50,7 +49,6 @@ type serializedPathWaypoint = {typeof(typeToId.PathWaypoint) | serializedVector3
 type serializedRegion3int16 = {typeof(typeToId.Region3int16) | serializedVector3int16}
 type serializedFont = {typeof(typeToId.Font) | string | serializedEnumItem}
 type serializedTuple = {typeof(typeToId.Tuple) | any}
-type serializedFunction = {typeof(typeToId.Function) | any | {any}}
 
 -- serializers
 function serializers.CFrame(value: CFrame): serializedCFrame
