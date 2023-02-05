@@ -21,6 +21,8 @@ Serializing roblox's primitive types to make them supported for these.
 | Vector2                   |
 | Vector2int16              |
 | Vector3int16              |
+| UDim                      |
+| UDim2                     |
 
 (note that ill probably not update this list frequently but to get the latest list,
 read serializerList.lua inside the module folder)
