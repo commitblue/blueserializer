@@ -23,6 +23,17 @@ Serializing roblox's primitive types to make them supported for these.
 | Vector3int16              |
 | UDim                      |
 | UDim2                     |
+| Region3                   |
+| Region3int16              |
+| PhysicalProperties        |
+| Rect                      |
+| NumberRange               |
+| Ray                       |
+| DockWidgetPluginGuiInfo   |
+| PathwayPoint              |
+
+Also special thanks to contributors for adding too much
+serializable types to the module!
 
 (note that ill probably not update this list frequently but to get the latest list,
 read serializerList.lua inside the module folder)
