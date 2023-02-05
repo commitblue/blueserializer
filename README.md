@@ -57,6 +57,4 @@ myPart.Color3 = blueSerializer.deserialize(dat.Color3)
 -- of blue serializer
 ```
 
-## Some things to note
-Default.project.json should be ignored. I only added it for the autofill
-This is not the most optimized way to serialize.
+Note this module is not the most optimized way to serialize.
