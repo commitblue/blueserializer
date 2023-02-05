@@ -13,8 +13,11 @@ local typeToId = {
 	TweenInfo = "T",
 	Vector2 = "V2",
 	Vector2int16 = "V2i",
-	Vector3int16 = "Vi"
+	Vector3int16 = "Vi",
+	UDim2 = "U2",
+	UDim = "U"
 }
+
 local idToType = {
 	C = "CFrame",
 	V = "Vector3",
@@ -24,7 +27,9 @@ local idToType = {
 	T = "TweenInfo",
 	V2 = "Vector2",
 	V2i = "Vector2int16",
-	Vi = "Vector3int16"
+	Vi = "Vector3int16",
+	U = "UDim",
+	U2 = "UDim2"
 }
 
 type serializedCFrame = {typeof(typeToId.CFrame) | number}
@@ -36,6 +41,8 @@ type serializedVector2 = {typeof(typeToId.Vector2) | number}
 type serializedVector3 = {typeof(typeToId.Vector3) | number}
 type serializedVector2int16 = {typeof(typeToId.Vector2int16) | number}
 type serializedVector3int16 = {typeof(typeToId.Vector3int16) | number}
+type serializedUDim = {typeof(typeToId.UDim) | number}
+type serializedUDim2 = {typeof(typeToId.UDim2) | number}
 
 -- serializers
 function serializers.CFrame(cframe : CFrame): serializedCFrame
@@ -74,6 +81,14 @@ function serializers.Vector3int16(value : Vector3int16): serializedVector3int16
 	return {typeToId.Vector3int16, value.X, value.Y, value.Z}
 end
 
+function serializers.UDim(value : UDim): serializedUDim
+	return {typeToId.UDim, value.Scale, value.Offset}
+end
+
+function serializers.UDim2(value: UDim2): serializedUDim2
+	return {typeToId.UDim2, value.X.Scale, value.X.Offset, value.Y.Scale, value.Y.Offset}
+end
+
 -- deserializers (Note these does NOT Check for the type of table's value, if you want it to, use init.lua)
 function deserializers.CFrame(value : serializedCFrame)
 	return CFrame.new(unpack(value, 2))
@@ -109,6 +124,14 @@ end
 
 function deserializers.Vector3int16(value : serializedVector3int16)
 	return Vector3int16.new(unpack(value, 2))
+end
+
+function deserializers.UDim(value: serializedUDim)
+	return UDim.new(unpack(value, 2))
+end
+
+function deserializers.UDim2(value: serializedUDim2)
+	return UDim2.new(unpack(value, 2))
 end
 
 return table.freeze({
