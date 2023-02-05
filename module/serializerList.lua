@@ -1,72 +1,119 @@
-local serializerList = {
-    serializers = {},
-    deserializers = {},
-    valueIds = {
-        CFrame = "C",
-        Vector3 = "V",
-        Color3 = "C3",
-        EnumItem = "E",
-        BrickColor = "B",
-        TweenInfo = "T",
-        Vector2 = "V2",
-        Vector2int16 = "V2i",
-        Vector3int16 = "Vi"
-    }
+--!strict
+
+local serializers = {}
+local deserializers = {}
+
+-- TODO: compress these (will break backwards compatibility)
+local typeToId = {
+	CFrame = "C",
+	Vector3 = "V",
+	Color3 = "C3",
+	EnumItem = "E",
+	BrickColor = "B",
+	TweenInfo = "T",
+	Vector2 = "V2",
+	Vector2int16 = "V2i",
+	Vector3int16 = "Vi"
 }
--- serializers (here goes garbage that took 213093912399123912993 minutez to write)
-function serializerList.serializers.CFrame(value : CFrame)
-    return {serializerList.valueIds.CFrame, value:GetComponents()}
+local idToType = {
+	C = "CFrame",
+	V = "Vector3",
+	C3 = "Color3",
+	E = "EnumItem",
+	B = "BrickColor",
+	T = "TweenInfo",
+	V2 = "Vector2",
+	V2i = "Vector2int16",
+	Vi = "Vector3int16"
+}
+
+type serializedCFrame = {typeof(typeToId.CFrame) | number}
+type serializedColor3 = {typeof(typeToId.Color3) | number}
+type serializedEnumItem = {typeof(typeToId.EnumItem) | number}
+type serializedBrickColor = {typeof(typeToId.BrickColor) | string}
+type serializedTweenInfo = {typeof(typeToId.TweenInfo) | number | Enum.EasingStyle | Enum.EasingDirection | boolean}
+type serializedVector2 = {typeof(typeToId.Vector2) | number}
+type serializedVector3 = {typeof(typeToId.Vector3) | number}
+type serializedVector2int16 = {typeof(typeToId.Vector2int16) | number}
+type serializedVector3int16 = {typeof(typeToId.Vector3int16) | number}
+
+-- serializers
+function serializers.CFrame(cframe : CFrame): serializedCFrame
+	return {typeToId.CFrame, cframe:GetComponents()}
 end
-function serializerList.serializers.Vector3(value : Vector3)
-    return {serializerList.valueIds.Vector3, value.X, value.Y, value.Z} -- it has to be hard
+
+function serializers.Color3(value : Color3): serializedColor3
+	return {typeToId.Color3, value.R, value.G, value.B}
 end
-function serializerList.serializers.Color3(value : Color3)
-    return {serializerList.valueIds.Color3, value.R, value.G, value.B}
+
+function serializers.EnumItem(value : EnumItem): serializedEnumItem
+	return {typeToId.EnumItem, tostring(value.EnumType), value.Name}
 end
-function serializerList.serializers.EnumItem(value : EnumItem)
-    return {serializerList.valueIds.EnumItem, value.EnumType, value.Name}
+
+function serializers.BrickColor(value : BrickColor): serializedBrickColor
+	return {typeToId.BrickColor, value.Name}
 end
-function serializerList.serializers.BrickColor(value : BrickColor)
-    return {serializerList.valueIds.BrickColor, value.Name}
+
+function serializers.TweenInfo(value : TweenInfo): serializedTweenInfo
+	return {typeToId.TweenInfo, value.Time, value.EasingStyle, value.EasingDirection, value.RepeatCount, value.Reverses, value.DelayTime}
 end
-function serializerList.serializers.TweenInfo(value : TweenInfo)
-    return {serializerList.valueIds.TweenInfo, value.Time, value.EasingStyle, value.EasingDirection, value.RepeatCount, value.Reverses, value.DelayTime}
+
+function serializers.Vector2(value : Vector2): serializedVector2
+	return {typeToId.Vector2, value.X, value.Y}
 end
-function serializerList.serializers.Vector2(value : Vector2)
-    return {serializerList.valueIds.Vector2, value.X, value.Y}
+
+function serializers.Vector2int16(value : Vector2int16): serializedVector2int16
+	return {typeToId.Vector2int16, value.X, value.Y}
 end
-function serializerList.serializers.Vector2int16(value : Vector2int16)
-    return {serializerList.valueIds.Vector2int16, value.X, value.Y}
+
+function serializers.Vector3(vector3 : Vector3): serializedVector3
+	return {typeToId.Vector3, vector3.X, vector3.Y, vector3.Z} -- it has to be hard
 end
-function serializerList.serializers.Vector3int16(value : Vector3int16)
-    return {serializerList.valueIds.Vector3int16, value.X, value.Y, value.Z}
+
+function serializers.Vector3int16(value : Vector3int16): serializedVector3int16
+	return {typeToId.Vector3int16, value.X, value.Y, value.Z}
 end
+
 -- deserializers (Note these does NOT Check for the type of table's value, if you want it to, use init.lua)
-function serializerList.deserializers.CFrame(value : table)
-    return CFrame.new(table.unpack(value, 2, #value))
+function deserializers.CFrame(value : serializedCFrame)
+	return CFrame.new(unpack(value, 2))
 end
-function serializerList.deserializers.Vector3(value : table)
-    return Vector3.new(table.unpack(value, 2, #value))
+
+function deserializers.Vector3(value : serializedVector3)
+	return Vector3.new(unpack(value, 2))
 end
-function serializerList.deserializers.Color3(value : table)
-    return Color3.new(table.unpack(value, 2, #value))
+
+function deserializers.Color3(value : serializedColor3)
+	return Color3.new(unpack(value, 2))
 end
-function serializerList.deserializers.EnumItem(value : table)
-    return Enum[value[2]][value[3]]
+
+function deserializers.EnumItem(value : serializedEnumItem)
+	return Enum[value[2]][value[3]]
 end
-function serializerList.deserializers.BrickColor(value : table)
-    return BrickColor.new(value[2])
+
+function deserializers.BrickColor(value : serializedBrickColor)
+	return BrickColor.new(value[2])
 end
-function serializerList.deserializers.TweenInfo(value : table)
-    return TweenInfo.new(table.unpack(value, 2, #value))
+
+function deserializers.TweenInfo(value : serializedTweenInfo)
+	return TweenInfo.new(unpack(value, 2))
 end
-function serializerList.deserializers.Vector2(value : table)
-    return Vector2.new(table.unpack(value, 2, #value))
+
+function deserializers.Vector2(value : serializedVector2)
+	return Vector2.new(unpack(value, 2))
 end
-function serializerList.deserializers.Vector2int16(value : table)
-    return Vector2int16.new(table.unpack(value, 2, #value))
+
+function deserializers.Vector2int16(value : serializedVector2int16)
+	return Vector2int16.new(unpack(value, 2))
 end
-function serializerList.deserializers.Vector3int16(value : table)
-    return Vector3int16.new(table.unpack(value, 2, #value))
+
+function deserializers.Vector3int16(value : serializedVector3int16)
+	return Vector3int16.new(unpack(value, 2))
 end
-return serializerList
+
+return table.freeze({
+	serializers = table.freeze(serializers),
+	deserializers = table.freeze(deserializers),
+	typeToId = table.freeze(typeToId),
+	idToType = table.freeze(idToType)
+})

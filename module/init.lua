@@ -1,21 +1,32 @@
-local serializerList = require(script.serializerList)
+--!strict
+
 local module = {}
-function module.serialize(value) : table
-    local valueTypeOf = typeof(value)
-    local valueIdFound = serializerList.valueIds[valueTypeOf]
-    if valueIdFound then
-        return serializerList.serializers[valueTypeOf](value)
-    end
-    return value
+
+local serializerList = require(script.serializerList)
+
+function module.serialize<value>(value) : {} | value
+	local valueType = typeof(value)
+	
+	local serializer = serializerList.serializers[valueType]
+	if serializer then
+		return serializer(value)
+	end
+	
+	return value
 end
-function module.deserialize(value : table)
-    -- TODO: Optimize this
-    for i,v in serializerList.valueIds do
-        if v == value[1] then
-            return serializerList.deserializers[i](value)
-        end
-    end
-    return value
+
+function module.deserialize<value>(value : {}) : value | {}
+	local id = value[1]
+	local deserializer = serializerList.deserializers[serializerList.idToType[id]]
+	
+	if deserializer then
+		return deserializer(value)
+	end
+	
+	return value
 end
+
+-- alias
 module.deSerialize = module.deserialize
-return module
+
+return table.freeze(module)
