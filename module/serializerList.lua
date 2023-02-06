@@ -3,7 +3,7 @@
 local serializers = {}
 local deserializers = {}
 
--- TODO: compress these (will break backwards compatibility)
+-- TODO: add axes
 local typeToId = {
 	CFrame = "C",
 	Vector3 = "V",
@@ -46,7 +46,8 @@ local idToType = {
 	D = "DockWidgetPluginGuiInfo",
 	PW = "PathWaypoint",
 	R3 = "Region3",
-	R3i = "Region3int16"
+	R3i = "Region3int16",
+	A = "Axes"
 }
 
 type serializedCFrame = {typeof(typeToId.CFrame) | number}
@@ -67,6 +68,7 @@ type serializedRay = {typeof(typeToId.Ray) | serializedVector3}
 type serializedDockWidgetPluginGuiInfo = {typeof(typeToId.Ray) | boolean | number}
 type serializedPathWaypoint = {typeof(typeToId.PathWaypoint) | serializedVector3 | serializedEnumItem | string}
 type serializedRegion3int16 = {typeof(typeToId.Region3int16) | serializedVector3int16}
+type serializedAxes = {typeof(typeToId.Axes)}
 
 -- serializers
 function serializers.CFrame(value: CFrame): serializedCFrame
@@ -141,7 +143,22 @@ function serializers.Region3int16(value: Region3int16): serializedRegion3int16
 	return {typeToId.Region3int16, serializers.Vector3int16(value.Min), serializers.Vector3int16(value.Max)}
 end
 
--- deserializers (Note these does NOT Check for the type of table's value, if you want it to, use init.lua)
+function serializers.Axes(value: Axes) : serializedAxes
+	return {
+		typeToId.Axes,
+		value.X,
+		value.Y,
+		value.Z,
+		value.Back,
+		value.Bottom,
+		value.Front,
+		value.Left,
+		value.Right,
+		value.Top
+	}
+end
+
+-- deserializers
 function deserializers.CFrame(value: serializedCFrame): CFrame
 	return CFrame.new(unpack(value, 2))
 end
@@ -212,6 +229,12 @@ end
 
 function deserializers.Region3int16(value: serializedRegion3int16): Region3int16
 	return Region3int16.new(deserializers.Vector3int16(value[2]), deserializers.Vector3int16(value[3])) -- we deserialize here because we serialized those values
+end
+
+function deserializers.Axes(value: serializedAxes): Axes
+	local valueWithoutTheType = table.unpack(value)
+	table.remove(valueWithoutTheType, 1)
+	return Axes.new(valueWithoutTheType)
 end
 
 return table.freeze({
