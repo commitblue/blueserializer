@@ -3,7 +3,7 @@
 local serializers = { }
 local deserializers = { }
 
--- TODO: compress these (will break backwards compatibility)
+-- TODO: add axes
 local typeToId = {
 	CFrame = "C",
 	Vector3 = "V",
@@ -24,9 +24,36 @@ local typeToId = {
 	DockWidgetPluginGuiInfo = "D",
 	PathWaypoint = "PW",
 	Region3 = "R3",
+
 	Region3int16 = "R3i",
 	Font = "F",
 	Tuple = "TU",
+
+	Region3int16 = "R3i"
+}
+
+local idToType = {
+	C = "CFrame",
+	V = "Vector3",
+	C3 = "Color3",
+	E = "EnumItem",
+	B = "BrickColor",
+	T = "TweenInfo",
+	V2 = "Vector2",
+	V2i = "Vector2int16",
+	Vi = "Vector3int16",
+	U = "UDim",
+	U2 = "UDim2",
+	R = "Rect",
+	N = "NumberRange",
+	P = "PhysicalProperties",
+	RA = "Ray",
+	D = "DockWidgetPluginGuiInfo",
+	PW = "PathWaypoint",
+	R3 = "Region3",
+	R3i = "Region3int16",
+	A = "Axes"
+
 }
 
 type serializedCFrame = {typeof(typeToId.CFrame) | number}
@@ -47,8 +74,11 @@ type serializedRay = {typeof(typeToId.Ray) | serializedVector3}
 type serializedDockWidgetPluginGuiInfo = {typeof(typeToId.Ray) | boolean | number}
 type serializedPathWaypoint = {typeof(typeToId.PathWaypoint) | serializedVector3 | serializedEnumItem | string}
 type serializedRegion3int16 = {typeof(typeToId.Region3int16) | serializedVector3int16}
+
 type serializedFont = {typeof(typeToId.Font) | string | serializedEnumItem}
 type serializedTuple = {typeof(typeToId.Tuple) | any}
+
+type serializedAxes = {typeof(typeToId.Axes)}
 
 -- serializers
 function serializers.CFrame(value: CFrame): serializedCFrame
@@ -123,6 +153,7 @@ function serializers.Region3int16(value: Region3int16): serializedRegion3int16
 	return {typeToId.Region3int16, serializers.Vector3int16(value.Min), serializers.Vector3int16(value.Max)}
 end
 
+
 function serializers.Font(value: Font): serializedFont
 	return {typeToId.Font, value.Family, serializers.EnumItem(value.Weight), serializers.EnumItem(value.Style)}
 end
@@ -132,6 +163,24 @@ function serializers.Tuple<T>(...: T): serializedTuple
 end
 
 -- deserializers (Note these does NOT Check for the type of table's value, if you want it to, use init.lua)
+
+function serializers.Axes(value: Axes) : serializedAxes
+	return {
+		typeToId.Axes,
+		value.X,
+		value.Y,
+		value.Z,
+		value.Back,
+		value.Bottom,
+		value.Front,
+		value.Left,
+		value.Right,
+		value.Top
+	}
+end
+
+-- deserializers
+
 function deserializers.CFrame(value: serializedCFrame): CFrame
 	return CFrame.new(unpack(value, 2))
 end
@@ -204,12 +253,19 @@ function deserializers.Region3int16(value: serializedRegion3int16): Region3int16
 	return Region3int16.new(deserializers.Vector3int16(value[2]), deserializers.Vector3int16(value[3])) -- we deserialize here because we serialized those values
 end
 
+
 function deserializers.Font(value: serializedFont): Font
 	return Font.new(value[2], deserializers.EnumItem(value[3]), deserializers.EnumItem(value[4]))
 end
 
 function deserializers.Tuple<T>(value: serializedTuple): ...T
 	return unpack(value, 2)
+end
+function deserializers.Axes(value: serializedAxes): Axes
+	local valueWithoutTheType = table.unpack(value)
+	table.remove(valueWithoutTheType, 1)
+	return Axes.new(valueWithoutTheType)
+
 end
 
 return table.freeze({
