@@ -31,6 +31,8 @@ Serializing roblox's primitive types to make them supported for these.
 | Ray                       |
 | DockWidgetPluginGuiInfo   |
 | PathwayPoint              |
+| Font                      |
+| Axes                      |
 
 Also special thanks to contributors for adding too much
 serializable types to the module!
