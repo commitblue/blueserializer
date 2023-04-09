@@ -29,7 +29,7 @@ local typeToId = {
 	Font = "F",
 	Tuple = "TU",
 
-	Region3int16 = "R3i"
+	
 }
 
 local idToType = {
