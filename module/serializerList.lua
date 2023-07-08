@@ -52,7 +52,9 @@ local idToType = {
 	PW = "PathWaypoint",
 	R3 = "Region3",
 	R3i = "Region3int16",
-	A = "Axes"
+	A = "Axes",
+	F = "Font",
+	TU = "Tuple"
 
 }
 
