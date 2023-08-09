@@ -1,10 +1,9 @@
 --!strict
 
-local module = {}
-
+local blueSerializer = { }
 local serializerList = require(script.serializerList)
 
-function module.serialize<value>(value) : {} | value
+function blueSerializer.serialize<T>(value) : {} | T
 	local valueType = typeof(value)
 	
 	local serializer = serializerList.serializers[valueType]
@@ -15,7 +14,7 @@ function module.serialize<value>(value) : {} | value
 	return value
 end
 
-function module.deserialize<value>(value : {}) : value | {}
+function blueSerializer.deserialize<T>(value : {}) : T | {}
 	local id = value[1]
 	local deserializer = serializerList.deserializers[serializerList.idToType[id]]
 	
@@ -27,6 +26,8 @@ function module.deserialize<value>(value : {}) : value | {}
 end
 
 -- alias
-module.deSerialize = module.deserialize
+blueSerializer.deSerialize = blueSerializer.deserialize
+blueSerializer.Deserialize = blueSerializer.deserialize
+blueSerializer.Serialize = blueSerializer.serialize
 
-return table.freeze(module)
+return table.freeze(blueSerializer)
