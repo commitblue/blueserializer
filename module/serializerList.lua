@@ -76,7 +76,7 @@ type serializedRay = {typeof(typeToId.Ray) | serializedVector3}
 type serializedDockWidgetPluginGuiInfo = {typeof(typeToId.Ray) | boolean | number}
 type serializedPathWaypoint = {typeof(typeToId.PathWaypoint) | serializedVector3 | serializedEnumItem | string}
 type serializedRegion3int16 = {typeof(typeToId.Region3int16) | serializedVector3int16}
-
+type serializedRegion3 = {typeof(typeToId.Region3) | serializedVector3 | serializedCFrame}
 type serializedFont = {typeof(typeToId.Font) | string | serializedEnumItem}
 type serializedTuple = {typeof(typeToId.Tuple) | any}
 
@@ -155,6 +155,9 @@ function serializers.Region3int16(value: Region3int16): serializedRegion3int16
 	return {typeToId.Region3int16, serializers.Vector3int16(value.Min), serializers.Vector3int16(value.Max)}
 end
 
+function serializers.Region3(value: Region3)
+	return {typeToId.Region3, serializers.Vector3(value.Size), serializers.CFrame(value.CFrame)}
+end
 
 function serializers.Font(value: Font): serializedFont
 	return {typeToId.Font, value.Family, serializers.EnumItem(value.Weight), serializers.EnumItem(value.Style)}
@@ -255,6 +258,12 @@ function deserializers.Region3int16(value: serializedRegion3int16): Region3int16
 	return Region3int16.new(deserializers.Vector3int16(value[2]), deserializers.Vector3int16(value[3])) -- we deserialize here because we serialized those values
 end
 
+function deserializers.Region3(value: serializedRegion3): Region3
+	local Size = deserializers.Vector3(value[2])
+	local CFrame = deserializers.CFrame(value[3])
+
+	return Region3.new(CFrame.Position - Size/2, CFrame.Position + Size/2)
+end
 
 function deserializers.Font(value: serializedFont): Font
 	return Font.new(value[2], deserializers.EnumItem(value[3]), deserializers.EnumItem(value[4]))
